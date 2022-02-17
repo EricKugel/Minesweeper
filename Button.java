@@ -9,13 +9,15 @@ public class Button extends JButton {
     private boolean isRevealed;
     private boolean isFlagged;
 
+    private static Button lastClicked = null;
+
     private int row;
     private int col;
 
     private int neighborMines = 0;
 
     private static final int SIZE = Minesweeper.SCREEN_SIZE / Minesweeper.SIZE;
-    private static final Color[] textColors = {Color.GREEN, Color.BLUE, Color.RED, Color.RED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
+    private static final Color[] textColors = {Color.GREEN, Color.BLUE, Color.RED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.YELLOW};
     private static final Font FONT = new Font(Font.MONOSPACED, Font.BOLD, SIZE * 3 / 4);
 
     public Button(Minesweeper minesweeper, boolean isMine, int row, int col) {
@@ -30,15 +32,20 @@ public class Button extends JButton {
         setBackground(new Color(150, 150, 150));
 
         addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                boolean rightClick = SwingUtilities.isRightMouseButton(e);
-                buttonClicked(rightClick);
+            public void mouseClicked(MouseEvent e) {
+                buttonClicked(e);
             }
         });
     }
 
-    private void buttonClicked(boolean isRightClick) {
-        minesweeper.buttonClicked(this, isRightClick);
+    public void buttonClicked(MouseEvent e) {
+        boolean doubleClick = isRevealed && e.getClickCount() == 2;
+        if (lastClicked == null || !this.equals(lastClicked)) {
+            doubleClick = false;
+        }
+        boolean rightClick = SwingUtilities.isRightMouseButton(e);
+        minesweeper.buttonClicked(this, rightClick, doubleClick);
+        lastClicked = this;
     }
 
     public boolean equals(Button other) {
@@ -47,6 +54,18 @@ public class Button extends JButton {
 
     public boolean isMine() {
         return isMine;
+    }
+
+    public boolean isFlagged() {
+        return isFlagged;
+    }
+
+    public void neutralize() {
+        isMine = false;
+    }
+
+    public boolean isRevealed() {
+        return isRevealed;
     }
 
     public int getRow() {
@@ -60,8 +79,10 @@ public class Button extends JButton {
     public void flag() {
         if (isFlagged) {
             isFlagged = false;
+            minesweeper.changeFlags(1);
         } else if (!isRevealed) {
            isFlagged = true;
+           minesweeper.changeFlags(-1);
         }
         repaint();
     }
@@ -76,7 +97,10 @@ public class Button extends JButton {
 
     public void reveal() {
         isRevealed = true;
-        isFlagged = false;
+        if (isFlagged) {
+            isFlagged = false;
+            minesweeper.changeFlags(1);
+        }
         repaint();
     }
 
@@ -84,14 +108,15 @@ public class Button extends JButton {
     public void paintComponent(Graphics g) {
         g.setFont(FONT);
         if (isRevealed) {
-            g.setColor(Color.WHITE);
-            g.fillRect(0, 0, SIZE, SIZE);
             if (isMine) {
-                g.setColor(Color.RED);
-                g.fillArc(0, 0, SIZE, SIZE, 0, 360);
-            } else if (neighborMines > 0) {
-                g.setColor(textColors[neighborMines - 1]);
-                g.drawString("" + neighborMines, SIZE / 4, SIZE * 3 / 4);
+                // do nothing
+            } else {
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, SIZE, SIZE);
+                if (neighborMines > 0) {
+                    g.setColor(textColors[neighborMines - 1]);
+                    g.drawString("" + neighborMines, SIZE / 4, SIZE * 3 / 4);
+                }
             }
         } else {
             g.setColor(new Color(220, 220, 220));
@@ -100,7 +125,7 @@ public class Button extends JButton {
 
         if (isFlagged) {
             g.setColor(Color.ORANGE);
-            g.fillPolygon(new int[] {SIZE / 10, SIZE, SIZE / 5, SIZE / 5, SIZE / 10}, new int[] {0, SIZE / 4, SIZE / 2, SIZE, SIZE}, 5);
+            g.fillPolygon(new int[] {SIZE / 4, SIZE, SIZE * 3 / 8, SIZE * 3 / 8, SIZE / 4}, new int[] {0, SIZE / 4, SIZE / 2, SIZE, SIZE}, 5);
         }
     }
 }
