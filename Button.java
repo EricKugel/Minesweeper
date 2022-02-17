@@ -16,19 +16,21 @@ public class Button extends JButton {
 
     private int neighborMines = 0;
 
-    private static final int SIZE = Minesweeper.SCREEN_SIZE / Minesweeper.SIZE;
-    private static final Color[] textColors = {Color.GREEN, Color.BLUE, Color.RED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.YELLOW};
-    private static final Font FONT = new Font(Font.MONOSPACED, Font.BOLD, SIZE * 3 / 4);
+    private int size;
+    private final Color[] textColors = {Color.GREEN, Color.BLUE, Color.RED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.YELLOW};
+    private Font font;
 
     public Button(Minesweeper minesweeper, boolean isMine, int row, int col) {
         this.minesweeper = minesweeper;
+        this.size = Minesweeper.SCREEN_SIZE / minesweeper.getGridSize();
+        this.font = new Font(Font.MONOSPACED, Font.BOLD, size * 3 / 4);
         this.isMine = isMine;
         this.isRevealed = false;
         this.isFlagged = false;
         this.row = row;
         this.col = col;
         setFocusable(false);
-        setPreferredSize(new Dimension(SIZE, SIZE));
+        setPreferredSize(new Dimension(size, size));
         setBackground(new Color(150, 150, 150));
 
         addMouseListener(new MouseAdapter() {
@@ -106,26 +108,26 @@ public class Button extends JButton {
 
     @Override
     public void paintComponent(Graphics g) {
-        g.setFont(FONT);
+        g.setFont(font);
         if (isRevealed) {
             if (isMine) {
                 // do nothing
             } else {
                 g.setColor(Color.WHITE);
-                g.fillRect(0, 0, SIZE, SIZE);
+                g.fillRect(0, 0, size, size);
                 if (neighborMines > 0) {
                     g.setColor(textColors[neighborMines - 1]);
-                    g.drawString("" + neighborMines, SIZE / 4, SIZE * 3 / 4);
+                    g.drawString("" + neighborMines, size / 4, size * 3 / 4);
                 }
             }
         } else {
             g.setColor(new Color(220, 220, 220));
-            g.fillRect(0, 0, SIZE, SIZE);
+            g.fillRect(0, 0, size, size);
         }
 
         if (isFlagged) {
             g.setColor(Color.ORANGE);
-            g.fillPolygon(new int[] {SIZE / 4, SIZE, SIZE * 3 / 8, SIZE * 3 / 8, SIZE / 4}, new int[] {0, SIZE / 4, SIZE / 2, SIZE, SIZE}, 5);
+            g.fillPolygon(new int[] {size / 4, size, size * 3 / 8, size * 3 / 8, size / 4}, new int[] {0, size / 4, size / 2, size, size}, 5);
         }
     }
 }
