@@ -40,8 +40,22 @@ public class Minesweeper extends JFrame {
             }
         }
 
+        JPanel flagPanel = new JPanel();
+        add(flagPanel, BorderLayout.NORTH);
+
+        flagPanel.add(new JLabel() {
+            private final int SIZE = 40;
+            public Dimension getPreferredSize() {
+                return new Dimension(SIZE, SIZE);
+            }
+            public void paintComponent(Graphics g) {
+                g.setColor(Color.RED);
+                g.fillPolygon(new int[] {SIZE / 4, SIZE, SIZE * 3 / 8, SIZE * 3 / 8, SIZE / 4}, new int[] {0, SIZE / 4, SIZE / 2, SIZE, SIZE}, 5);
+            }
+        });
         flagLabel.setText("" + flags);
-        add(flagLabel, BorderLayout.NORTH);
+        flagPanel.add(flagLabel);
+
         add(main);
     }
 
