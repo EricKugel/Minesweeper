@@ -1,4 +1,55 @@
-# Minesweeper
-
 # BOOOM
 watch out
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+comments and readme files are for the weak
