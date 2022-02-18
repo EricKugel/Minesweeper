@@ -5,22 +5,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
-
-
 public class Minesweeper extends JFrame {
     public static final int SCREEN_SIZE = 800;
     private int size;
-
     private int flags = 0;
     private JLabel flagLabel = new JLabel();
-
     private boolean isFirstClick = true;
-
     private JPanel main;
-
     private Button[][] grid;
-
-    
     
     public Minesweeper(int size) {
         this.size = size;
@@ -33,17 +25,13 @@ public class Minesweeper extends JFrame {
         pack();
     }
 
-    public Minesweeper() {
-        this(15);
-    }
-
     private void initGUI() {
         ImageIcon img = new ImageIcon("icon.png");
         setIconImage(img.getImage());
         
+        // Main Panel
         main = new JPanel();
         main.setLayout(new GridLayout(size, size));
-
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 Button button = new Button(this, (int) (Math.random() * 6) == 0, row, col);
@@ -52,9 +40,9 @@ public class Minesweeper extends JFrame {
             }
         }
 
+        // Flag Panel
         JPanel flagPanel = new JPanel();
         add(flagPanel, BorderLayout.NORTH);
-
         flagPanel.add(new JLabel() {
             private final int SIZE = 40;
             public Dimension getPreferredSize() {
@@ -68,8 +56,7 @@ public class Minesweeper extends JFrame {
         flagLabel.setText("" + flags);
         flagPanel.add(flagLabel);
 
-        add(main);
-
+        // Difficulty Menu
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
         JMenu difficultyMenu = new JMenu("Difficulty");
@@ -99,10 +86,8 @@ public class Minesweeper extends JFrame {
             });
             difficultyMenu.add(menuItem);
         }
-    }
 
-    private void endGame() {
-        this.dispose();
+        add(main);
     }
 
     public void buttonClicked(Button button, boolean isRightClick, boolean isDoubleClick) {
@@ -180,31 +165,6 @@ public class Minesweeper extends JFrame {
         }
     }
 
-    public void changeFlags(int change) {
-        flags += change;
-        flagLabel.setText("" + flags);
-    }
-
-    public int getGridSize() {
-        return size;
-    }
-
-    private void gameOver() {
-        JFrame frame = new JFrame();
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setUndecorated(true);
-        frame.setVisible(true);
-        try {
-            frame.add(new JLabel(new ImageIcon(ImageIO.read(new File("explosion.png")))));
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // JOptionPane.showMessageDialog(null, "You messed up", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-        // System.exit(0);
-    }
-
     private ArrayList<Button> getSafeNeighbors(int row, int col, ArrayList<Button> safeNeighbors) {
         for (int r = -1; r < 2; r++) {
             for (int c = -1; c < 2; c++) {
@@ -228,7 +188,35 @@ public class Minesweeper extends JFrame {
         return safeNeighbors;
     }
 
+    private void gameOver() {
+        // boom
+        JFrame frame = new JFrame();
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.setVisible(true);
+        try {
+            frame.add(new JLabel(new ImageIcon(ImageIO.read(new File("explosion.png")))));
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+    
+    private void endGame() {
+        this.dispose();
+    }
+
+    public void changeFlags(int change) {
+        flags += change;
+        flagLabel.setText("" + flags);
+    }
+
+    public int getGridSize() {
+        return size;
+    }
+    
     public static void main(String[] arg0) {
-        new Minesweeper();
+        new Minesweeper(15);
     }
 }

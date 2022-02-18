@@ -50,62 +50,6 @@ public class Button extends JButton {
         lastClicked = this;
     }
 
-    public boolean equals(Button other) {
-        return other.getCol() == col && other.getRow() == row;
-    }
-
-    public boolean isMine() {
-        return isMine;
-    }
-
-    public boolean isFlagged() {
-        return isFlagged;
-    }
-
-    public void neutralize() {
-        isMine = false;
-    }
-
-    public boolean isRevealed() {
-        return isRevealed;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
-    public void flag() {
-        if (isFlagged) {
-            isFlagged = false;
-            minesweeper.changeFlags(1);
-        } else if (!isRevealed) {
-           isFlagged = true;
-           minesweeper.changeFlags(-1);
-        }
-        repaint();
-    }
-
-    public void setNeighborMines(int neighborMines) {
-        this.neighborMines = neighborMines;
-    }
-
-    public int getNeighborMines() {
-        return neighborMines;
-    }
-
-    public void reveal() {
-        isRevealed = true;
-        if (isFlagged) {
-            isFlagged = false;
-            minesweeper.changeFlags(1);
-        }
-        repaint();
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         g.setFont(font);
@@ -129,5 +73,61 @@ public class Button extends JButton {
             g.setColor(Color.ORANGE);
             g.fillPolygon(new int[] {size / 4, size, size * 3 / 8, size * 3 / 8, size / 4}, new int[] {0, size / 4, size / 2, size, size}, 5);
         }
+    }
+
+    public void flag() {
+        if (isFlagged) {
+            isFlagged = false;
+            minesweeper.changeFlags(1);
+        } else if (!isRevealed) {
+           isFlagged = true;
+           minesweeper.changeFlags(-1);
+        }
+        repaint();
+    }
+
+    public void reveal() {
+        isRevealed = true;
+        if (isFlagged) {
+            isFlagged = false;
+            minesweeper.changeFlags(1);
+        }
+        repaint();
+    }
+
+    public boolean equals(Button other) {
+        return other.getCol() == col && other.getRow() == row;
+    }
+
+    public void neutralize() {
+        isMine = false;
+    }
+
+    public boolean isMine() {
+        return isMine;
+    }
+
+    public boolean isFlagged() {
+        return isFlagged;
+    }
+
+    public boolean isRevealed() {
+        return isRevealed;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public void setNeighborMines(int neighborMines) {
+        this.neighborMines = neighborMines;
+    }
+
+    public int getNeighborMines() {
+        return neighborMines;
     }
 }
