@@ -26,7 +26,12 @@ public class Minesweeper extends JFrame {
     }
 
     private void initGUI() {
-        ImageIcon img = new ImageIcon("icon.png");
+        ImageIcon img = null;
+        try {
+            img = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("icon.png")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setIconImage(img.getImage());
         
         // Main Panel
@@ -91,8 +96,10 @@ public class Minesweeper extends JFrame {
     }
 
     public void buttonClicked(Button button, boolean isRightClick, boolean isDoubleClick) {
+        // Initialize board (count mines)
         if (isFirstClick) {
             isFirstClick = false;
+            // To make sure the player gets something to start with, remove the mines two out in every direction
             for (int r = -2; r <= 2; r++) {
                 for (int c = -2; c <= 2; c++) {
                     grid[button.getRow() + r][button.getCol() + c].neutralize();
@@ -125,6 +132,7 @@ public class Minesweeper extends JFrame {
         if (isRightClick) {
             button.flag();
         } else if (isDoubleClick) {
+            // click all surrounding boxes
             for (int row = button.getRow() - 1; row <= button.getRow() + 1; row++) {
                 for (int col = button.getCol() - 1; col <= button.getCol() + 1; col++) {
                     if (row >= 0 && row < size && col >= 0 && col < size) {
@@ -165,6 +173,7 @@ public class Minesweeper extends JFrame {
         }
     }
 
+    // This is a recursive function that continues adding neighbors to the same ArrayList object, safeNeighbors
     private ArrayList<Button> getSafeNeighbors(int row, int col, ArrayList<Button> safeNeighbors) {
         for (int r = -1; r < 2; r++) {
             for (int c = -1; c < 2; c++) {
@@ -195,7 +204,7 @@ public class Minesweeper extends JFrame {
         frame.setUndecorated(true);
         frame.setVisible(true);
         try {
-            frame.add(new JLabel(new ImageIcon(ImageIO.read(new File("explosion.png")))));
+            frame.add(new JLabel(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("explosion.png")))));
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -215,7 +224,7 @@ public class Minesweeper extends JFrame {
     public int getGridSize() {
         return size;
     }
-    
+
     public static void main(String[] arg0) {
         new Minesweeper(15);
     }
