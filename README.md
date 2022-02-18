@@ -1,4 +1,4 @@
 # Minesweeper
 
-#BOOOM
+# BOOOM
 watch out
