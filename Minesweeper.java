@@ -38,6 +38,9 @@ public class Minesweeper extends JFrame {
     }
 
     private void initGUI() {
+        ImageIcon img = new ImageIcon("icon.png");
+        setIconImage(img.getImage());
+        
         main = new JPanel();
         main.setLayout(new GridLayout(size, size));
 
