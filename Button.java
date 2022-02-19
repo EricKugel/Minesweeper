@@ -17,7 +17,7 @@ public class Button extends JButton {
     private int neighborMines = 0;
 
     private int size;
-    private final Color[] textColors = {Color.GREEN, Color.BLUE, Color.RED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.YELLOW};
+    private final Color[] textColors = {Color.GREEN, Color.BLUE, Color.RED, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.YELLOW};
     private Font font;
 
     public Button(Minesweeper minesweeper, boolean isMine, int row, int col) {
@@ -57,7 +57,7 @@ public class Button extends JButton {
             if (isMine) {
                 // do nothing
             } else {
-                g.setColor(Color.WHITE);
+                g.setColor(new Color(50, 50, 50));
                 g.fillRect(0, 0, size, size);
                 if (neighborMines > 0) {
                     g.setColor(textColors[neighborMines - 1]);
@@ -65,7 +65,7 @@ public class Button extends JButton {
                 }
             }
         } else {
-            g.setColor(new Color(220, 220, 220));
+            g.setColor(Color.BLACK);
             g.fillRect(0, 0, size, size);
         }
 

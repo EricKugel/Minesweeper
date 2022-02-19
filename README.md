@@ -1,4 +1,2 @@
-# BOOOM
-watch out
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-Comments and readme files are for the weak
+# WARNING
+Random files in the picture folder are deleted if you click on a mine. Better stick with the regualar branch!!

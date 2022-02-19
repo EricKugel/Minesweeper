@@ -17,12 +17,61 @@ public class Minesweeper extends JFrame {
     public Minesweeper(int size) {
         this.size = size;
         this.grid = new Button[size][size];
-        setTitle("Minesweeper");
-        setVisible(true);
+        setTitle("High Stakes Minesweeper");
+        setVisible(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         initGUI();
         pack();
+
+        showWarning();
+    }
+
+    private void showWarning() {
+        JFrame frame = new JFrame();
+        frame.setTitle("WARNING");
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        JLabel warning = new JLabel("WARNING");
+        warning.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 124));
+        warning.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        warning.setBackground(Color.BLACK);
+        warning.setForeground(Color.YELLOW);
+        warning.setOpaque(true);
+        frame.add(warning, BorderLayout.NORTH);
+
+        JLabel text = new JLabel("Clicking on a mine will delete a random file from your picture folder. Proceed?", SwingConstants.CENTER);
+        text.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
+        text.setBackground(Color.BLACK);
+        text.setForeground(Color.WHITE);
+        text.setOpaque(true);
+        text.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        frame.add(text, BorderLayout.CENTER);
+        
+        JPanel buttonPanel = new JPanel();
+        JButton proceed = new JButton("Proceed");
+        proceed.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                setVisible(true);
+            }
+        });
+        buttonPanel.add(proceed);
+
+        JButton quit = new JButton("I'm a coward");
+        quit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        buttonPanel.add(quit);
+        buttonPanel.setBackground(Color.BLACK);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
+        frame.setResizable(false);
+        frame.pack();
     }
 
     private void initGUI() {
@@ -47,6 +96,7 @@ public class Minesweeper extends JFrame {
 
         // Flag Panel
         JPanel flagPanel = new JPanel();
+        flagPanel.setBackground(Color.BLACK);
         add(flagPanel, BorderLayout.NORTH);
         flagPanel.add(new JLabel() {
             private final int SIZE = 40;
@@ -54,43 +104,16 @@ public class Minesweeper extends JFrame {
                 return new Dimension(SIZE, SIZE);
             }
             public void paintComponent(Graphics g) {
+                g.setColor(Color.BLACK);
+                g.fillRect(0, 0, SIZE, SIZE);
                 g.setColor(Color.RED);
                 g.fillPolygon(new int[] {SIZE / 4, SIZE, SIZE * 3 / 8, SIZE * 3 / 8, SIZE / 4}, new int[] {0, SIZE / 4, SIZE / 2, SIZE, SIZE}, 5);
             }
         });
+        flagLabel.setBackground(Color.BLACK);
+        flagLabel.setForeground(Color.WHITE);
         flagLabel.setText("" + flags);
         flagPanel.add(flagLabel);
-
-        // Difficulty Menu
-        JMenuBar menuBar = new JMenuBar();
-        setJMenuBar(menuBar);
-        JMenu difficultyMenu = new JMenu("Difficulty");
-        menuBar.add(difficultyMenu);
-        JMenuItem[] difficultyMenuItems = {new JMenuItem("Easy"), new JMenuItem("Normal"), new JMenuItem("Hard"), new JMenuItem("Insane")};
-        
-        for (JMenuItem menuItem : difficultyMenuItems) {
-            menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    int newSize = 0;
-                    switch(menuItem.getText()) {
-                        case "Easy":
-                            newSize = 10;
-                            break;
-                        case "Normal":
-                            newSize = 15;
-                            break;
-                        case "Hard":
-                            newSize = 20;
-                            break;
-                        case "Insane":
-                            newSize = 40;
-                    }
-                    endGame();
-                    new Minesweeper(newSize);
-                }
-            });
-            difficultyMenu.add(menuItem);
-        }
 
         add(main);
     }
@@ -210,10 +233,22 @@ public class Minesweeper extends JFrame {
         }
         frame.setResizable(false);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    }
-    
-    private void endGame() {
-        this.dispose();
+
+        try {
+            File pictureFolder = new File("C:/Users/" + System.getProperty("user.name") + "/Pictures");
+            File[] pictures = pictureFolder.listFiles();
+            int index = 0;
+            boolean deleted = false;
+            while (!deleted) {
+                index = (int) (Math.random() * pictures.length);
+                if (pictures[index].isFile())
+                    deleted = pictures[index].delete();
+            }
+        } catch(Exception e) {
+            // do nothing
+        }
+
+        JOptionPane.showMessageDialog(null, "A file was deleted", "BOOOM", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void changeFlags(int change) {
@@ -226,6 +261,6 @@ public class Minesweeper extends JFrame {
     }
 
     public static void main(String[] arg0) {
-        new Minesweeper(15);
+        new Minesweeper(25);
     }
 }
